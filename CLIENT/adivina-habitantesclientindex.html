@@ -31,11 +31,13 @@
       color: white;
     }
   </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
   <h1>🎯 Adivina el número</h1>
-  <p>Estoy pensando en un número entre <strong>1 y 10,000</strong>.</p>
+  <p>Estoy pensando en un número entre <strong>1 y 10,000</strong>. ¿Puedes adivinarlo?</p>
 
   <input type="text" id="nombre" placeholder="Tu nombre" />
   <input type="number" id="intento" placeholder="Tu número" />
@@ -49,96 +51,111 @@
   <h2>🏆 Mejores Jugadores</h2>
   <table id="tablaPuntajes">
     <thead>
-      <tr><th>Jugador</th><th>Intentos</th></tr>
+      <tr><th>Posición</th><th>Jugador</th><th>Intentos</th></tr>
     </thead>
     <tbody></tbody>
   </table>
 
-  <script>
-    const BIN_ID = "684b248b8561e97a50232a99";
-    const API_KEY = "$2a$10$Ycd4YOJ6NYAnq4FDMeWLDeO.cFvhaDlmzyo1YTkl.JWGmrvPfWb3G";
+<script>
+  const BIN_ID = "684b248b8561e97a50232a99";
+  const API_KEY = "$2a$10$Ycd4YOJ6NYAnq4FDMeWLDeO.cFvhaDlmzyo1YTkl.JWGmrvPfWb3G";
 
-    let numeroSecreto;
-    let conteoIntentos = 0;
+  let numeroSecreto;
+  let conteoIntentos = 0;
 
-    function generarNuevoNumero() {
-      numeroSecreto = Math.floor(Math.random() * 10000) + 1;
-      conteoIntentos = 0;
-      document.getElementById("mensaje").textContent = "Nuevo número generado. ¡A jugar!";
-      document.getElementById("intentos").textContent = "Intentos: 0";
-      document.getElementById("intento").value = "";
-      document.getElementById("nombre").value = "";
-      document.getElementById("intento").focus();
+  function generarNuevoNumero() {
+    numeroSecreto = Math.floor(Math.random() * 10000) + 1;
+    conteoIntentos = 0;
+    document.getElementById("mensaje").textContent = "Nuevo número generado. ¡A jugar!";
+    document.getElementById("intentos").textContent = "Intentos: 0";
+    document.getElementById("intento").value = "";
+    document.getElementById("nombre").value = "";
+    document.getElementById("intento").focus();
+  }
+
+  async function verificar() {
+    const nombre = document.getElementById("nombre").value.trim();
+    const valor = parseInt(document.getElementById("intento").value);
+    const mensaje = document.getElementById("mensaje");
+
+    if (!nombre || isNaN(valor) || valor < 1 || valor > 10000) {
+      mensaje.textContent = "Por favor, ingresa un nombre y un número válido entre 1 y 10,000.";
+      return;
     }
 
-    async function verificar() {
-      const nombre = document.getElementById("nombre").value.trim();
-      const valor = parseInt(document.getElementById("intento").value);
-      const mensaje = document.getElementById("mensaje");
+    conteoIntentos++;
+    document.getElementById("intentos").textContent = `Intentos: ${conteoIntentos}`;
 
-      if (!nombre || isNaN(valor) || valor < 1 || valor > 10000) {
-        mensaje.textContent = "Por favor, ingresa un nombre y un número válido entre 1 y 10,000.";
-        return;
-      }
-
-      conteoIntentos++;
-      document.getElementById("intentos").textContent = `Intentos: ${conteoIntentos}`;
-
-      if (valor === numeroSecreto) {
-        mensaje.textContent = `¡Correcto ${nombre}! Adivinaste en ${conteoIntentos} intentos.`;
-        await guardarPuntaje(nombre, conteoIntentos);
-        mostrarPuntajes();
-      } else {
-        mensaje.textContent = valor < numeroSecreto ? "Muy bajo." : "Muy alto.";
-      }
-      document.getElementById("intento").value = "";
-      document.getElementById("intento").focus();
-    }
-
-    async function guardarPuntaje(nombre, intentos) {
-      const data = await obtenerDatos();
-      data.push({ nombre, intentos });
-      data.sort((a, b) => a.intentos - b.intentos);
-      data.splice(10); // Solo guardamos los mejores 10
-
-      await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Master-Key": API_KEY
-        },
-        body: JSON.stringify({ scores: data })
-      });
-    }
-
-    async function obtenerDatos() {
-      try {
-        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-          headers: { "X-Master-Key": API_KEY }
-        });
-        const json = await res.json();
-        return json.record.scores || [];
-      } catch {
-        return [];
-      }
-    }
-
-    async function mostrarPuntajes() {
-      const tabla = document.getElementById("tablaPuntajes").getElementsByTagName("tbody")[0];
-      tabla.innerHTML = "";
-      const data = await obtenerDatos();
-      data.forEach(p => {
-        const fila = tabla.insertRow();
-        fila.insertCell(0).textContent = p.nombre;
-        fila.insertCell(1).textContent = p.intentos;
-      });
-    }
-
-    window.onload = () => {
-      generarNuevoNumero();
+    if (valor === numeroSecreto) {
+      mensaje.textContent = `¡Correcto ${nombre}! Adivinaste en ${conteoIntentos} intentos.`;
+      await guardarPuntaje(nombre, conteoIntentos);
       mostrarPuntajes();
+      lanzarConfeti();
+    } else {
+      mensaje.textContent = valor < numeroSecreto ? "Muy bajo." : "Muy alto.";
     }
-  </script>
+
+    document.getElementById("intento").value = "";
+    document.getElementById("intento").focus();
+  }
+
+  function lanzarConfeti() {
+    confetti({
+      particleCount: 150,
+      spread: 100,
+      origin: { y: 0.6 }
+    });
+  }
+
+  async function guardarPuntaje(nombre, intentos) {
+    const data = await obtenerDatos();
+    data.push({ nombre, intentos });
+    data.sort((a, b) => a.intentos - b.intentos);
+    data.splice(10); // guardamos solo los mejores 10
+
+    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key": API_KEY
+      },
+      body: JSON.stringify({ scores: data })
+    });
+  }
+
+  async function obtenerDatos() {
+    try {
+      const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+        headers: { "X-Master-Key": API_KEY }
+      });
+      const json = await res.json();
+      return json.record.scores || [];
+    } catch {
+      return [];
+    }
+  }
+
+  async function mostrarPuntajes() {
+    const tabla = document.getElementById("tablaPuntajes").getElementsByTagName("tbody")[0];
+    tabla.innerHTML = "";
+    const data = await obtenerDatos();
+    data.forEach((p, index) => {
+      const fila = tabla.insertRow();
+      let icono = "";
+      if (index === 0) icono = "🥇";
+      else if (index === 1) icono = "🥈";
+      else if (index === 2) icono = "🍭";
+      fila.insertCell(0).textContent = icono || (index + 1);
+      fila.insertCell(1).textContent = p.nombre;
+      fila.insertCell(2).textContent = p.intentos;
+    });
+  }
+
+  window.onload = () => {
+    generarNuevoNumero();
+    mostrarPuntajes();
+  }
+</script>
 
 </body>
 </html>
