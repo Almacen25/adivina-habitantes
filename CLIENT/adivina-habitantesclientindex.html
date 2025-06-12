@@ -7,7 +7,7 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: url('[https://images.unsplash.com/photo-1527333656061-9b1c00a2678b?auto=format&fit=crop&w=1470&q=80](https://www.istockphoto.com/es/foto/signo-de-interrogaci%C3%B3n-amarillo-sobre-un-fondo-de-signos-negros-faq-concept-gm1308986719-398839118)') no-repeat center center fixed;
+      background: url('https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/22E0/production/_118982980_gettyimages-155285521.jpg.webp') no-repeat center center fixed;
       background-size: cover;
       margin: 50px auto;
       max-width: 600px;
