@@ -13,6 +13,16 @@
       max-width: 600px;
       color: #fff;
       text-shadow: 1px 1px 2px black;
+      transition: background-color 0.5s;
+    }
+
+    .flash {
+      animation: flashBG 0.5s;
+    }
+
+    @keyframes flashBG {
+      0% { background-color: rgba(255, 255, 255, 0.3); }
+      100% { background-color: transparent; }
     }
 
     h1 {
@@ -99,6 +109,9 @@
     <tbody></tbody>
   </table>
 
+  <!-- Sonido -->
+  <audio id="victorySound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3"></audio>
+
 <script>
   const BIN_ID = "684b248b8561e97a50232a99";
   const API_KEY = "$2a$10$Ycd4YOJ6NYAnq4FDMeWLDeO.cFvhaDlmzyo1YTkl.JWGmrvPfWb3G";
@@ -114,6 +127,10 @@
     document.getElementById("intento").value = "";
     document.getElementById("nombre").value = "";
     document.getElementById("intento").focus();
+
+    // Efecto visual
+    document.body.classList.add('flash');
+    setTimeout(() => document.body.classList.remove('flash'), 500);
   }
 
   async function verificar() {
@@ -134,6 +151,7 @@
       await guardarPuntaje(nombre, conteoIntentos);
       mostrarPuntajes();
       lanzarConfeti();
+      reproducirSonido();
     } else {
       mensaje.textContent = valor < numeroSecreto ? "Muy bajo." : "Muy alto.";
     }
@@ -148,6 +166,10 @@
       spread: 100,
       origin: { y: 0.6 }
     });
+  }
+
+  function reproducirSonido() {
+    document.getElementById('victorySound').play();
   }
 
   async function guardarPuntaje(nombre, intentos) {
