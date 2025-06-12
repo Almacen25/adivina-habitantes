@@ -7,9 +7,12 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background-color: #f0f0f0;
+      background: url('https://images.unsplash.com/photo-1527333656061-9b1c00a2678b?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background-size: cover;
       margin: 50px auto;
       max-width: 600px;
+      color: #ffffff;
+      text-shadow: 1px 1px 2px black;
     }
     input, button {
       font-size: 1rem;
@@ -23,7 +26,7 @@
     #leyenda {
       margin-top: 10px;
       font-size: 1rem;
-      color: green;
+      color: yellow;
       font-weight: bold;
     }
     #reiniciar {
@@ -36,20 +39,21 @@
       text-decoration: underline;
     }
     #reiniciar:hover {
-      color: black;
+      color: white;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 30px;
-      background-color: white;
+      background-color: rgba(0, 0, 0, 0.5);
     }
     th, td {
       border: 1px solid #aaa;
       padding: 8px;
+      color: white;
     }
     th {
-      background-color: #ddd;
+      background-color: rgba(255, 255, 255, 0.2);
     }
   </style>
 </head>
@@ -88,7 +92,7 @@
     let conteoIntentos = 0;
 
     function generarNuevoNumero() {
-      numeroSecreto = Math.floor(Math.random() * 100) + 1;
+      numeroSecreto = Math.floor(Math.random() * 1000000) + 1;
       conteoIntentos = 0;
       document.getElementById("mensaje").textContent = "🔁 Número secreto reiniciado. ¡Intenta adivinar el nuevo!";
       document.getElementById("intentos").textContent = "Intentos: 0";
@@ -147,7 +151,6 @@
       fila.insertCell(0).textContent = nombre;
       fila.insertCell(1).textContent = intentos;
 
-      // Ordenar la tabla por intentos (ascendente)
       let filas = Array.from(tabla.rows);
       filas.sort((a, b) => parseInt(a.cells[1].textContent) - parseInt(b.cells[1].textContent));
       filas.forEach(f => tabla.appendChild(f));
