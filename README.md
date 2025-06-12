@@ -90,6 +90,19 @@
   <script>
     let numeroSecreto;
     let conteoIntentos = 0;
+    let puntajes = [];
+
+    function cargarPuntajes() {
+      const datos = localStorage.getItem("puntajes");
+      if (datos) {
+        puntajes = JSON.parse(datos);
+      }
+      actualizarTabla();
+    }
+
+    function guardarPuntajes() {
+      localStorage.setItem("puntajes", JSON.stringify(puntajes));
+    }
 
     function generarNuevoNumero() {
       numeroSecreto = Math.floor(Math.random() * 1000000) + 1;
@@ -146,22 +159,26 @@
     }
 
     function agregarAlaTabla(nombre, intentos) {
-      const tabla = document.getElementById("tablaPuntajes").getElementsByTagName("tbody")[0];
-      const fila = tabla.insertRow();
-      fila.insertCell(0).textContent = nombre;
-      fila.insertCell(1).textContent = intentos;
+      puntajes.push({nombre, intentos});
+      puntajes.sort((a, b) => a.intentos - b.intentos);
+      guardarPuntajes();
+      actualizarTabla();
+    }
 
-      let filas = Array.from(tabla.rows);
-      filas.sort((a, b) => parseInt(a.cells[1].textContent) - parseInt(b.cells[1].textContent));
-      filas.forEach(f => tabla.appendChild(f));
+    function actualizarTabla() {
+      const tabla = document.getElementById("tablaPuntajes").getElementsByTagName("tbody")[0];
+      tabla.innerHTML = "";
+      puntajes.forEach(p => {
+        const fila = tabla.insertRow();
+        fila.insertCell(0).textContent = p.nombre;
+        fila.insertCell(1).textContent = p.intentos;
+      });
     }
 
     function verificarSiEsRecord(intentos) {
-      const tabla = document.getElementById("tablaPuntajes").getElementsByTagName("tbody")[0];
       const leyenda = document.getElementById("leyenda");
-      const filas = Array.from(tabla.rows);
-      if (filas.length > 1) {
-        const mejor = parseInt(filas[0].cells[1].textContent);
+      if (puntajes.length > 1) {
+        const mejor = puntajes[0].intentos;
         if (intentos <= mejor) {
           leyenda.textContent = "🏆 ¡Nuevo récord! Has superado al mejor jugador.";
         } else {
@@ -172,7 +189,10 @@
       }
     }
 
-    window.onload = generarNuevoNumero;
+    window.onload = () => {
+      cargarPuntajes();
+      generarNuevoNumero();
+    };
   </script>
 </body>
 </html>
