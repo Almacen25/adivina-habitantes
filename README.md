@@ -110,7 +110,7 @@
   </table>
 
   <!-- Sonido -->
-  <audio id="victorySound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3"></audio>
+  <audio id="victorySound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3" preload="auto"></audio>
 
 <script>
   const BIN_ID = "684b248b8561e97a50232a99";
@@ -169,7 +169,11 @@
   }
 
   function reproducirSonido() {
-    document.getElementById('victorySound').play();
+    const audio = document.getElementById('victorySound');
+    audio.currentTime = 0; // Reiniciar al inicio para que pueda reproducirse repetidamente
+    audio.play().catch(e => {
+      console.warn("No se pudo reproducir el sonido: ", e);
+    });
   }
 
   async function guardarPuntaje(nombre, intentos) {
@@ -217,6 +221,13 @@
   }
 
   window.onload = () => {
+    const audio = document.getElementById('victorySound');
+    audio.play().then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+    }).catch(() => {
+      // No pasa nada si no se puede reproducir al cargar
+    });
     generarNuevoNumero();
     mostrarPuntajes();
   }
