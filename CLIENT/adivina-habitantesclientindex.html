@@ -59,7 +59,7 @@
 </head>
 <body>
   <h1>🎯 Adivina el número</h1>
-  <p>Estoy pensando en un número entre <strong>1 y 1,000,000</strong>. ¿Puedes adivinarlo?</p>
+  <p>Estoy pensando en un número entre <strong>1 y 10,000</strong>. ¿Puedes adivinarlo?</p>
 
   <input type="text" id="nombre" placeholder="Tu nombre" />
   <input type="number" id="intento" placeholder="Tu número" />
@@ -105,7 +105,7 @@
     }
 
     function generarNuevoNumero() {
-      numeroSecreto = Math.floor(Math.random() * 1000000) + 1;
+      numeroSecreto = Math.floor(Math.random() * 10000) + 1;
       conteoIntentos = 0;
       document.getElementById("mensaje").textContent = "🔁 Número secreto reiniciado. ¡Intenta adivinar el nuevo!";
       document.getElementById("intentos").textContent = "Intentos: 0";
