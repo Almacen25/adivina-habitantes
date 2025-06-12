@@ -5,7 +5,7 @@
   <title>Adivina el número</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       text-align: center;
       background: url('https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/22E0/production/_118982980_gettyimages-155285521.jpg.webp') no-repeat center center fixed;
       background-size: cover;
@@ -14,17 +14,60 @@
       color: #fff;
       text-shadow: 1px 1px 2px black;
     }
-    input, button {
-      font-size: 1rem;
-      padding: 10px;
-      margin: 5px;
+
+    h1 {
+      font-size: 3rem;
+      color: #FFD700;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+      margin-bottom: 10px;
+      animation: brillo 3s infinite alternate;
     }
+
+    @keyframes brillo {
+      0% { text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7); }
+      100% { text-shadow: 5px 5px 10px rgba(255, 255, 255, 0.9); }
+    }
+
+    p {
+      font-size: 1.3rem;
+    }
+
+    input, button {
+      font-size: 1.1rem;
+      padding: 12px 20px;
+      margin: 8px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    input {
+      border: 2px solid #fff;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      text-shadow: 1px 1px 2px black;
+    }
+
+    button {
+      background-color: #ff8c00;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #ffa500;
+      transform: scale(1.05);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 30px;
       background-color: rgba(0, 0, 0, 0.5);
     }
+
     th, td {
       border: 1px solid #aaa;
       padding: 8px;
