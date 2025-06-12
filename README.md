@@ -111,7 +111,7 @@
     const data = await obtenerDatos();
     data.push({ nombre, intentos });
     data.sort((a, b) => a.intentos - b.intentos);
-    data.splice(10); // guardamos solo los mejores 10
+    data.splice(1000); // guardamos solo los mejores 1000
 
     await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
       method: "PUT",
