@@ -14,7 +14,7 @@
 </head>
 <body>
   <h1>🌎 Adivina la población del planeta</h1>
-  <p>Estoy pensando en un número entre 1 y 8,100,000,000</p>
+  <p>Estoy pensando en un número entre 1 y 1,000,000</p>
 
   <input type="text" id="nombre" placeholder="Tu nombre" />
   <input type="number" id="intento" placeholder="Tu número" />
